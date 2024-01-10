@@ -1,4 +1,4 @@
-package plugins.example.WritingModels;
+package plugins.WritingModels;
 import com.change_vision.jude.api.inf.AstahAPI;
 
 import com.change_vision.jude.api.inf.editor.*;
@@ -6,14 +6,13 @@ import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.*;
-import com.change_vision.jude.api.inf.presentation.INodePresentation;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
-import plugins.example.ReadingModels.ReadingDatamodel;
+import plugins.ReadingModels.ReadingDatamodel;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Map;
 
-import plugins.System.SupportSystem;
+import plugins.System.Generator;
 
 
 public class CreateScenarios{
@@ -32,7 +31,7 @@ public class CreateScenarios{
         IPackage scenarioPackage = null;
         ProjectAccessor prjAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
         IModel project = prjAccessor.getProject();
-        INamedElement[] elements = SupportSystem.project.getOwnedElements();
+        INamedElement[] elements = Generator.project.getOwnedElements();
         System.out.println("シナリオ生成開始");
         //トランザクションの開始
         ITransactionManager transactionManager = prjAccessor.getTransactionManager();
@@ -52,7 +51,7 @@ public class CreateScenarios{
         }
         if (scenarioPackage == null) {
             System.out.println("package:scenarioが見つかりませんでした:　作成中...");
-            scenarioPackage = basicModelEditor.createPackage(SupportSystem.project, scenarioPackageName);
+            scenarioPackage = basicModelEditor.createPackage(Generator.project, scenarioPackageName);
         }
 
         try {
@@ -121,22 +120,5 @@ public class CreateScenarios{
     public static int getSenarioNum(){
         return scenarioNum;
     }
-
-
-//    public static void main(String[] args) {
-//        //テスト用 実際は引数でtext（gptからの出力を整形したもの）を受け取る
-//        String text = "This is some text with {\"個人情報\": {\"名前\":\"ヤマダ\"}} JSON objects {\"住所\": {\"県\":\"東京\",\"市区\":\"新宿\"}} inside.{\"個人情報\": {\"名前\":\"ヤマダ\"}}";
-//        JsonExtractor jsonExtractor = new JsonExtractor();
-//
-//        List<JSONObject> jsonObjects = jsonExtractor.extractJsonObjects(text);
-//        System.out.println(jsonObjects.get(1));
-//        List<JSONObject> classjsonObjects=jsonExtractor.JsonObjectParser(jsonObjects.get(1));
-//        //classjsonobjectsの一覧を出力
-//        for(JSONObject jsonObject : classjsonObjects){
-//            System.out.println(jsonObject.keys().next());
-//            System.out.println(jsonObject);
-//        }
-//        //createScenarioClass(classjsonObjects);
-//    }
 }
 

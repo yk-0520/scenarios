@@ -1,9 +1,10 @@
-package plugins.example.ReadingModels;
+package plugins.ReadingModels;
 
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.*;
 import com.change_vision.jude.api.inf.presentation.IPresentation;
+import plugins.ReadingModels.ReadingAllDiagrams;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,7 +17,7 @@ public class ReadingScenarios {
 
     public static Map<String,Map<String,String>> ReadingScenario(IModel project , String scenarioDiagramName) throws ClassNotFoundException, ProjectNotFoundException, InvalidUsingException {
         Map<String,Map<String,String>> AllclassInfo = new LinkedHashMap<>();
-        ArrayList<IDiagram> diagrams=ReadingAllDiagrams.ListReadingAllDiagrams(project);
+        ArrayList<IDiagram> diagrams= ReadingAllDiagrams.ListReadingAllDiagrams(project);
 
         for(IDiagram diagram:diagrams){
             if(diagram.getName().equals(scenarioDiagramName) && !diagram.getName().equals("datamodel")){

@@ -1,4 +1,4 @@
-package plugins.example.ReadingModels;
+package plugins.ReadingModels;
 
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.*;

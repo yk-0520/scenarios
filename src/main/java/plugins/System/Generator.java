@@ -20,12 +20,10 @@ import com.change_vision.jude.api.inf.project.ProjectEvent;
 import com.change_vision.jude.api.inf.project.ProjectEventListener;
 import com.change_vision.jude.api.inf.ui.IPluginExtraTabView;
 import com.change_vision.jude.api.inf.ui.ISelectionListener;
-import plugins.ReadingAPIKey;
-import plugins.example.ReadingModels.ReadingAllDiagrams;
-import plugins.example.ReadingModels.ReadingDatamodel;
-import plugins.example.ReadingModels.ReadingScenarios;
-import plugins.example.ScenarioGenerator;
-import plugins.ReadingAPIKey;
+import plugins.ReadingModels.ReadingAllDiagrams;
+import plugins.ReadingModels.ReadingDatamodel;
+import plugins.ReadingModels.ReadingScenarios;
+import plugins.WritingModels.ScenarioGenerator;
 
 import javax.swing.JOptionPane;
 import javax.swing.*;
@@ -37,7 +35,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-public class SupportSystem extends JPanel
+
+public class Generator extends JPanel
         implements IPluginExtraTabView, ProjectEventListener, ActionListener {
 
     public static String APIKEY=null;
@@ -87,11 +86,13 @@ public class SupportSystem extends JPanel
     public static IModel project;
 
     protected String[] list= {"ファイルなし"};
-    public SupportSystem() {
+    public Generator() {
         initComponents();
     }
 
     private void initComponents() {
+
+
         this.rightPanel = new JPanel();
         this.leftPanel = new JPanel();
         this.systemFieldPanel = new JPanel();
@@ -234,7 +235,6 @@ public class SupportSystem extends JPanel
     @Override
     public void projectClosed(ProjectEvent e) {
     }
-
     @Override
     public void projectOpened(ProjectEvent e) {
         ArrayList<IDiagram> diagrams;
@@ -273,7 +273,7 @@ public class SupportSystem extends JPanel
 
     @Override
     public String getTitle() {
-        return "Support System";
+        return "Generator";
     }
 
     public void activated() {
@@ -416,11 +416,12 @@ public class SupportSystem extends JPanel
     private static boolean readingAPIKeyForPropaties(){
         String apikeys= ReadingAPIKey.ReadingAPIKeyForPropaties();
         if(apikeys!=null){
-            SupportSystem.APIKEY=apikeys;
+            Generator.APIKEY=apikeys;
             System.out.println("apikey.propertiesからAPIキーを読み込みました");
             return true;
         }else{
             return false;
         }
     }
+
 }

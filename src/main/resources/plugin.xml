@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
-        <extension point="com.change_vision.astah.ui.actionSets">
-            <actionSet
-                    label="%action_set_label"
-                    visible="true"
-                    id="plugins.scenarios.actionSet">
-                <menu
-                        id="scenarios"
-                        label="%menu_group"
-                        path="tool/scenarios">
-                </menu>
-                <action
-                        label="%menu_label"
-                        icon="icons/sample.gif"
-                        class="plugins.TemplateAction"
-                        tooltip="%menu_tooltip"
-                        menubarPath="tool/scenarios/"
-                        id="scenarios">
-                </action>
-            </actionSet>
-        </extension>
+<!--        <extension point="com.change_vision.astah.ui.actionSets">-->
+<!--            <actionSet-->
+<!--                    label="%action_set_label"-->
+<!--                    visible="true"-->
+<!--                    id="plugins.scenarios.actionSet">-->
+<!--                <menu-->
+<!--                        id="scenarios"-->
+<!--                        label="%menu_group"-->
+<!--                        path="tool/scenarios">-->
+<!--                </menu>-->
+<!--                <action-->
+<!--                        label="%menu_label"-->
+<!--                        icon="icons/sample.gif"-->
+<!--                        class="plugins.TemplateAction"-->
+<!--                        tooltip="%menu_tooltip"-->
+<!--                        menubarPath="tool/scenarios/"-->
+<!--                        id="scenarios">-->
+<!--                </action>-->
+<!--            </actionSet>-->
+<!--        </extension>-->
     <extension point="com.change_vision.astah.ui.view">
         <view
-                id="scenarios.plugins.System.SupportSystem"
+                id="scenarios.plugins.System.Generator"
                 type="extraTab"
-                class="plugins.System.SupportSystem"/>
+                class="plugins.System.Generator"/>
     </extension>
 </plugin>

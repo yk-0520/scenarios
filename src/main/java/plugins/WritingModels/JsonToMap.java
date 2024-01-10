@@ -1,4 +1,4 @@
-package plugins.example;
+package plugins.WritingModels;
 
 import org.json.JSONObject;
 
@@ -32,28 +32,6 @@ public class JsonToMap {
         }
         return innerMap;
     }
-
-
-//テスト用
-//    public static void main(String[] args) {
-//        // サンプルのJSONデータを作成
-//        String jsonString = "{\"key1\":{\"subkey1\":\"value1\",\"subkey2\":\"value2\"},\"key2\":\"value3\"}";
-//
-//        // JSON文字列をJSONObjectに変換
-//        JSONObject jsonObject = new JSONObject(jsonString);
-//
-//        // JsonToMapクラスを使用して変換
-//        Map<String, Map<String, String>> resultMap = JsonToMap.jsonObjectToMap(jsonObject);
-//
-//        // 結果の表示
-//        for (Map.Entry<String, Map<String, String>> entry : resultMap.entrySet()) {
-//            System.out.println("Key: " + entry.getKey());
-//            Map<String, String> innerMap = entry.getValue();
-//            for (Map.Entry<String, String> innerEntry : innerMap.entrySet()) {
-//                System.out.println("  SubKey: " + innerEntry.getKey() + ", Value: " + innerEntry.getValue());
-//            }
-//        }
-//    }
 }
 
 

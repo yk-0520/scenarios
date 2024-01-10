@@ -1,4 +1,4 @@
-package plugins.example.APIForGeneratorAI;
+package plugins.APIForGeneratorAI;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package plugins.example.APIForGeneratorAI;
+package plugins.APIForGeneratorAI;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class APIForChatGPT {
     //以下の初期値apikeyは，開発時以外は消去する
-    private static String DEVAPIKEY="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";
+    private static String DEVAPIKEY=null;
     private static String DEVMODELVERSION="gpt-3.5-turbo-1106";
 
     public static String generateAnswer(String datamodel,String system,String usecase ,String apikey,String modelversion) throws IOException {

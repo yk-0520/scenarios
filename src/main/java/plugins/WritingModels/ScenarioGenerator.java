@@ -1,4 +1,4 @@
-package plugins.example;
+package plugins.WritingModels;
 
 import com.change_vision.jude.api.inf.exception.*;
 import com.google.gson.Gson;
@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import plugins.example.WritingModels.CreateScenarios;
-import plugins.example.APIForGeneratorAI.APIForChatGPT;
+import plugins.WritingModels.CreateScenarios;
+import plugins.APIForGeneratorAI.APIForChatGPT;
 import org.json.JSONObject;
+import plugins.WritingModels.JsonExtractor;
+import plugins.WritingModels.JsonToMap;
 
 //シナリオ生成のためのクラス
 public class ScenarioGenerator {
@@ -18,7 +20,7 @@ public class ScenarioGenerator {
         Gson gson = new Gson();
         String datamodel = gson.toJson(classmap);
         String scenario = APIForChatGPT.generateAnswer(datamodel, system, prompt ,apikey,modelVersion);
-        JSONObject answer=JsonExtractor.extractAfterDatamodel(JsonExtractor.extractJsonObjects(scenario));
+        JSONObject answer= JsonExtractor.extractAfterDatamodel(JsonExtractor.extractJsonObjects(scenario));
         System.out.println(answer.toString());
 
         //回答がリストの場合，再度生成
