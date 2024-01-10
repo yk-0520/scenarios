@@ -1,21 +1,23 @@
-ディレクトリ構成，名前の制限(* 必須)
-projectName
-|-datamodel*
-| |-datamodel(クラス図，クラス)
-|-scenario*
-  | |-scenario1(オブジェクト図) 
-    |-scenario2...
+# astahファイルの設定
+- ファイル名：任意
+- データモデルのパッケージ名:datamodel
+- データモデルのクラス図名：datamodel
+- データモデルのクラス図の配置:datamodelパッケージ内
+- 生成されるオブジェクト図の配置:scenarioパッケージ内
+- 生成されるオブジェクト図の名前:scenario0.1.2...
+
+##### データモデルのクラスとクラス図はdatamodelパッケージ内に定義してください
 
 
-環境設定
-基本はastahチュートリアルに従う
-intellijの設定
-設定->ビルド，実行->ビルドツール->Maven->Mavenのホームディレクトリ，設定ファイルをastahSDK1.*に設定（astahSDK/settings.xmlを編集した場合）
-（プラグインレジストリを有効？）
-
-chatgpt (など)のkeyなど，各自設定する必要のあるものをどうするか
-
-pluginから，設定に遷移するようにして，各設定を行う
-設定項目　
-使用するLLM
-使用に必要な各設定apikeyなど
+### openAI APIkey の設定
+設定方法は2通り
+###### 1.propertiesファイルに設定
+1. scenarios-1.0-SNAPSHOT.jarと同じ階層にsettingsというフォルダを作成
+2. settingsフォルダの中にapikey.properties ファイルを作成
+3. apikey.propertiesに以下を記述する
+```
+apikey=設定するAPIキー
+```
+###### 2. astahプラグインで設定
+1. プラグインの設定から，apiキーを直接入力する
+   **apiキーの情報は毎回入力する必要あり**
