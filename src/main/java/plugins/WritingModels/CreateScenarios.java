@@ -7,10 +7,15 @@ import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.*;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
+import plugins.ReadingModels.ReadingAllDiagrams;
 import plugins.ReadingModels.ReadingDatamodel;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
+import plugins.System.Generator;
+import java.util.Arrays;
+import java.util.List;
 
 import plugins.System.Generator;
 
@@ -18,6 +23,7 @@ import plugins.System.Generator;
 public class CreateScenarios{
     //installer
     private static int scenarioNum=0;
+    private static int scenarioSecondNum=0;
     private static final String scenarioPackageName="scenario";
     private static final String scenarioDiagramName="scenario";
 
@@ -58,26 +64,39 @@ public class CreateScenarios{
             classDiagramEditor.createClassDiagram(scenarioPackage, scenarioDiagramName + scenarioNum);
         } catch (InvalidEditingException e) {
             System.out.println("同じ名前のクラスが既に存在する可能性があります　名称を変更して作成");
-            scenarioNum++;
-            classDiagramEditor.createClassDiagram(scenarioPackage, scenarioDiagramName + scenarioNum);
+            ArrayList<IDiagram> diagrams = ReadingAllDiagrams.ListReadingAllDiagrams(project);
+            for(int i=0;i<1000;i++) {
+                if (!diagrams.contains(scenarioDiagramName + scenarioNum)) {
+                    classDiagramEditor.createClassDiagram(scenarioPackage, scenarioDiagramName + scenarioNum);
+                } else {
+                    scenarioNum++;
+                }
+            }
         }
         //ベースクラスの取得
-        ArrayList<IClass> baseClass = ReadingDatamodel.getBaseClasses();
+        ArrayList<IClass> baseClassList=ReadingDatamodel.getBaseClasses();
+
 
         //各インスタンス仕様の生成 classmapのkeysetでfor文を回す
         for (String key : classMap.keySet()) {
-            //クラス名が一致するベースクラスを取得
+            //属性一致するベースクラスを取得(要検討：クラス名)
             IClass matchBaseClass = null;
-            for (IClass iclass : baseClass) {
-                if (key.contains(iclass.getName())) {
-                    matchBaseClass = iclass;
+            List<IAttribute> baseClassAttributeList=new ArrayList<>();
+
+            for(IClass baseClass:baseClassList){
+                baseClassAttributeList=Arrays.asList(baseClass.getAttributes());
+                List<String> baseClassAtttributeListasString=new ArrayList<>();
+                for(IAttribute attr:baseClassAttributeList){
+                    baseClassAtttributeListasString.add(attr.getName());
+                }
+                if(baseClassAtttributeListasString.containsAll(classMap.get(key).keySet())&&key.contains(baseClass.getName())){
+                    matchBaseClass=baseClass;
                 }
             }
             //ベースクラスが見つからない場合
             if (matchBaseClass == null) {
                 System.out.println("クラス名:" + key + "のベースクラスが見つかりませんでした");
             }
-
             //インスタンス仕様の作成
             //ベースクラスの割り当て
             if (matchBaseClass != null) {
@@ -97,7 +116,12 @@ public class CreateScenarios{
                         //属性名が一致するか判定
                         if (classMap.get(key).containsKey(attribute.getName())) {
                             //属性名が一致した場合，属性の具体値を設定
-                            instance.getSlot(attribute.getName()).setValue(classMap.get(key).get(attribute.getName()));
+                            try{
+                                instance.getSlot(attribute.getName()).setValue(classMap.get(key).get(attribute.getName()));
+                            }catch(NullPointerException e){
+                                System.out.println("属性名:"+attribute.getName()+"の具体値が見つかりませんでした");
+                                continue;
+                            }
                         }
                     }
                 }

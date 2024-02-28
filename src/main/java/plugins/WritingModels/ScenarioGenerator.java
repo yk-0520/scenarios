@@ -3,9 +3,11 @@ package plugins.WritingModels;
 import com.change_vision.jude.api.inf.exception.*;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.GsonBuilder;
 import plugins.WritingModels.CreateScenarios;
 import plugins.APIForGeneratorAI.APIForChatGPT;
 import org.json.JSONObject;
@@ -15,11 +17,13 @@ import plugins.WritingModels.JsonToMap;
 //シナリオ生成のためのクラス
 public class ScenarioGenerator {
     static int requestNum=0;
+    static ArrayList<String> postAnswers= new ArrayList<>();
     static Map<String,Map<String,String>> generatedClassMap = new HashMap<>();
-    public static void ScenarioGenerate(Map<String,Map<String,String>> classmap,String system,String prompt ,String apikey,String modelVersion) throws IOException, ProjectNotFoundException, InvalidEditingException, InvalidUsingException, ClassNotFoundException {
+    public static void ScenarioGenerate(Map<String,Map<String,String>> classmap,String system,String prompt ,String apikey,String modelVersion,boolean datamodelflag) throws IOException, ProjectNotFoundException, InvalidEditingException, InvalidUsingException, ClassNotFoundException {
         Gson gson = new Gson();
-        String datamodel = gson.toJson(classmap);
-        String scenario = APIForChatGPT.generateAnswer(datamodel, system, prompt ,apikey,modelVersion);
+        Gson gson2=new GsonBuilder().setPrettyPrinting().create();
+        String datamodel = gson2.toJson(classmap);
+        String scenario = APIForChatGPT.generateAnswer(datamodel, system, prompt ,apikey,modelVersion,datamodelflag);
         JSONObject answer= JsonExtractor.extractAfterDatamodel(JsonExtractor.extractJsonObjects(scenario));
         System.out.println(answer.toString());
 
@@ -27,7 +31,7 @@ public class ScenarioGenerator {
         if(JsonExtractor.isList(answer.toString())){
             for(requestNum=0;requestNum<3;requestNum++){
                 System.out.println("不適切な回答：再度生成開始");
-                scenario = APIForChatGPT.generateAnswer(datamodel, system, prompt,apikey,modelVersion);
+                scenario = APIForChatGPT.generateAnswer(datamodel, system, prompt,apikey,modelVersion,datamodelflag);
                 answer=JsonExtractor.extractAfterDatamodel(JsonExtractor.extractJsonObjects(scenario));
                 System.out.println(answer.toString());
                 if(!JsonExtractor.isList(answer.toString())){

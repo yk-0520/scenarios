@@ -67,11 +67,16 @@ public class ReadingScenarios {
                         className=className+protectCounter;
                     }
                 }
-                for(int j=0;j<parentClass.getAttributes().length; j++){
-                    attributeValue=null;
-                    attributes=parentClass.getAttributes();
-                    attributeValue=namedElement.getSlot(attributes[j].getName());
-                    attributeInfo.put(attributes[j].getName(),attributeValue.getValue());
+                for(int j=0;j<parentClass.getAttributes().length; j++) {
+                    attributeValue = null;
+                    attributes = parentClass.getAttributes();
+                    try {
+                        attributeValue = namedElement.getSlot(attributes[j].getName());
+                        attributeInfo.put(attributes[j].getName(), attributeValue.getValue());
+                    } catch (NullPointerException e) {
+                        System.out.println("属性名:" + attributes[j].getName() + "の具体値が見つかりませんでした");
+                        continue;
+                    }
                 }
                 classInfo.put(className,attributeInfo);
             }

@@ -2,10 +2,7 @@ package plugins.ReadingModels;
 
 
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
-import com.change_vision.jude.api.inf.model.IDiagram;
-import com.change_vision.jude.api.inf.model.IModel;
-import com.change_vision.jude.api.inf.model.INamedElement;
-import com.change_vision.jude.api.inf.model.IPackage;
+import com.change_vision.jude.api.inf.model.*;
 
 import java.util.ArrayList;
 
@@ -32,6 +29,8 @@ public class ReadingAllDiagrams {
             }
         }
         return diagrams;
+    }//getcontainer
+    public static IElement getDiagramsRoot(IModel project) {
+        return project.getContainer();
     }
-
 }

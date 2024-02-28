@@ -24,6 +24,7 @@ import plugins.ReadingModels.ReadingAllDiagrams;
 import plugins.ReadingModels.ReadingDatamodel;
 import plugins.ReadingModels.ReadingScenarios;
 import plugins.WritingModels.ScenarioGenerator;
+import plugins.APIForGeneratorAI.SavePost;
 
 import javax.swing.JOptionPane;
 import javax.swing.*;
@@ -74,6 +75,8 @@ public class Generator extends JPanel
     private JButton configSaveButton;
     private JButton configCancelButton;
 
+    private JButton clearLLMHistoryButton;
+
     private DefaultListModel model= new DefaultListModel();
 
     private JList lists=null;
@@ -100,11 +103,14 @@ public class Generator extends JPanel
         this.buttonPanel = new JPanel();
         this.configButtonPanel = new JPanel();
         this.configDialog= new JDialog();
-        this.textArea= new JTextArea("生成元とするファイル，想定システム，シナリオを選択してください\n・ファイル一覧にファイルがない場合は再読み込みしてください");
+        this.clearLLMHistoryButton = new JButton("生成履歴をクリア");
+        this.clearLLMHistoryButton.addActionListener(this);
+        this.clearLLMHistoryButton.setActionCommand("LLMClear");
+        this.textArea= new JTextArea("生成元とするモデル，想定システム，生成意図を選択してください\n・ファイル一覧にモデル図がない場合は再読み込みしてください\n・意図しない生成が続く場合は生成履歴をクリアしてください");
         this.createButton = new JButton("生成");
         this.createButton.setActionCommand("create");
         this.createButton.addActionListener(this);
-        this.reloadButton = new JButton("ファイル再読み込み");
+        this.reloadButton = new JButton("モデル再読み込み");
         this.reloadButton.setActionCommand("reload");
         this.reloadButton.addActionListener(this);
         this.configButton = new JButton("設定");
@@ -131,7 +137,7 @@ public class Generator extends JPanel
         add(rightPanel);
         leftPanel.setLayout(new GridLayout(1,1));
         rightPanel.setLayout(new GridLayout(4,1));
-        buttonPanel.setLayout(new GridLayout(1,3));
+        buttonPanel.setLayout(new GridLayout(1,4));
         configDialog.setLayout(new GridLayout(4,1));
         configButtonPanel.setLayout(new GridLayout(1,2));
         systemFieldPanel.setLayout(new BorderLayout());
@@ -176,12 +182,13 @@ public class Generator extends JPanel
         systemFieldPanel.add(new JLabel("想定システム：（例：ECサイト）"),BorderLayout.NORTH);
         systemFieldPanel.add(systemTextField,BorderLayout.CENTER);
 
-        promptFieldPanel.add(new JLabel("使用例：（例：一人のお届け先に商品を購入する）"),BorderLayout.NORTH);
+        promptFieldPanel.add(new JLabel("生成意図：（例：お届け先情報オブジェクトを１つ作成する）"),BorderLayout.NORTH);
         promptFieldPanel.add(promptTextField,BorderLayout.CENTER);
 
         buttonPanel.add(createButton);
         buttonPanel.add(reloadButton);
         buttonPanel.add(configButton);
+        buttonPanel.add(clearLLMHistoryButton);
         readingAPIKeyForPropaties();
         if(readingAPIKeyForPropaties()){
             JOptionPane.showMessageDialog(this,"propatiesからapikeyを読み込みました","通知",JOptionPane.WARNING_MESSAGE);
@@ -241,6 +248,19 @@ public class Generator extends JPanel
         ArrayList<String> diagramNames = new ArrayList<>();
         System.out.println("プラグイン初期化...");
         try {
+            api=AstahAPI.getAstahAPI();
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+        prjAccessor = api.getProjectAccessor();
+        try {
+            project = prjAccessor.getProject();
+        } catch (ProjectNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+        System.out.println("API構築完了");
+        prjAccessor.addProjectEventListener(this);
+        try {
             diagrams = ReadingAllDiagrams.ListReadingAllDiagrams(project);
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
@@ -286,6 +306,7 @@ public class Generator extends JPanel
     public void actionPerformed(ActionEvent e) {
         Map<String, Map<String,String>> classMap=new LinkedHashMap<>();
         //ボタンごとに処理分け
+        boolean datamodelflag;
         if (e.getActionCommand().equals("create")) {
             //生成ボタンが押されたときの処理
             //シナリオ生成処理
@@ -311,13 +332,14 @@ public class Generator extends JPanel
                 JOptionPane.showMessageDialog(this, "シナリオが入力されていません", "警告", JOptionPane.WARNING_MESSAGE);
                 return;
             } else{
-                System.out.println("選択したデータモデル（シナリオ）："+selectedDiagram);
+                System.out.println("選択したモデル："+selectedDiagram);
                 System.out.println("想定システム："+system);
                 System.out.println("シナリオ："+prompt);
                 System.out.println("生成中...");
 
-                if(selectedDiagram.equals("datamodel")){
-                    System.out.println("datamodelを読み込みます");
+                if(selectedDiagram.equals("ScreenTransitionModel")){
+                    System.out.println("ScreenTransitionModelを読み込みます");
+                    datamodelflag=true;
                     try {
                         classMap= ReadingDatamodel.ReadingDatamodels(project);
                     } catch (ClassNotFoundException ex) {
@@ -327,6 +349,7 @@ public class Generator extends JPanel
                     }
                 }else{
                     System.out.println("scenarioを読み込み");
+                    datamodelflag=false;
                     try {
                         classMap= ReadingScenarios.ReadingScenario(project,selectedDiagram);
                     } catch (ClassNotFoundException ex) {
@@ -340,7 +363,7 @@ public class Generator extends JPanel
 
                 //生成AIへの入力処理,シナリオファイルの生成
                 try {
-                    ScenarioGenerator.ScenarioGenerate(classMap,system,prompt,APIKEY,MODELVERSION);
+                    ScenarioGenerator.ScenarioGenerate(classMap,system,prompt,APIKEY,MODELVERSION,datamodelflag);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 } catch (ProjectNotFoundException ex) {
@@ -411,6 +434,10 @@ public class Generator extends JPanel
 
         if(e.getActionCommand().equals("cancel")){
             configDialog.setVisible(false);
+        }
+        if(e.getActionCommand().equals("LLMClear")){
+            SavePost.clearPostAnswer();
+            SavePost.clearPostPrompt();
         }
     }
     private static boolean readingAPIKeyForPropaties(){

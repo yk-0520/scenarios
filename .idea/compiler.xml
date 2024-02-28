@@ -9,5 +9,8 @@
         <module name="scenarios" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="scenarios" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

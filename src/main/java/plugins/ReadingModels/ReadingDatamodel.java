@@ -9,7 +9,8 @@ import java.util.Map;
 //完成
 //rootからastahファイル中の指定のクラス図情報（データモデル）を読み込むクラス　Map<String,Map<string,String>> (クラス名，属性名，型名)の形で返す
 public class ReadingDatamodel {
-    private static final String dataDiagramName="datamodel";
+    public static Map<String,Map<String,String>> datamodelMap = new LinkedHashMap<>();
+    private static final String dataDiagramName="ScreenTransitionModel";
     private static IModel project;
     private static ArrayList<IClass> baseClasses;
 
@@ -48,11 +49,11 @@ public class ReadingDatamodel {
                 }
                 return AllclassInfo;
         }else{
-                System.out.println("Package:datamodelが見つかりませんでした");
+                System.out.println("Package:ScreenTransitionModelが見つかりませんでした");
                 return null;
             }
         }
-
+        datamodelMap = AllclassInfo;
         return AllclassInfo;
     }
     private static Map<String,String> getClassInfos(IClass iClass) {

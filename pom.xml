@@ -47,6 +47,11 @@
 			<id>uk-central</id>
 			<url>http://uk.maven.org/maven2/</url>
 		</repository>
+		<repository>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2/</url>
+		</repository>
+
 	</repositories>
 	<reporting>
 		<plugins>
@@ -171,17 +176,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-<!--			jarファイルから外部のpropertiesファイルを読み込むための設定,propertiesはsettings/に配置する-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<includes>
-						<include>settings/*.properties</include>
-					</includes>
-				</configuration>
-			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -268,6 +262,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.change_vision.astah</groupId>
@@ -310,5 +305,19 @@
 			<artifactId>okhttp</artifactId>
 			<version>4.12.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-aiplatform</artifactId>
+			<version>3.22.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-vertexai -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-vertexai</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
+
+
 	</dependencies>
 </project>
